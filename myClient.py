@@ -1,4 +1,5 @@
 import socket
+import re
 
 HOST = "127.0.0.1"  # This is the loopback address
 PORT = 65432        # The port used by the server
@@ -29,6 +30,8 @@ def talk_to_server(sock):
         return False
     else:
         print(f"received reply '{reply}' from server")
+        reply = ord(reply)
+        print(msg, '=', reply)
         return reply
 
 def changeInput(msg):
@@ -36,6 +39,7 @@ def changeInput(msg):
     plus = []
     minus = []
     sign = 'plus'
+    list = re.split('\+|-', msg)
     for i in range(0, length):
         if (msg[i].isnumeric()) and (sign == 'plus'):
             plus.append(msg[i])
@@ -52,6 +56,20 @@ def changeInput(msg):
     minuStr = ','.join(minus)
     result = '+' + plusStr + ';' + '-' + minuStr
     return result
+
+# Make sure that two signs are not near each other (like ++/--/+-/-+)
+def checkSign(msg):
+    for i in range(0, len(msg)):
+        if (msg[i] == '+') or (msg[i] == '-'):
+            if ((i+1)<len(msg)):
+                if (msg[i+1] == '+') or (msg[i+1] == '-'):
+                    return False
+            else:
+                return False
+    return True
+
+
+
 
 if __name__ == "__main__":
     run_client()

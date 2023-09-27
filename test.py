@@ -1,3 +1,8 @@
-list = ['a', '', 'c']
-print(list[1]==None)
-print(len(list[1])==0)
+import re
+
+msg1 = '1+2-3+40-56+111'
+list1 = msg1.split('+')
+print(list1)
+# msg = '-1+2-3+40-56+111'
+# list = re.split('\+|-', msg)
+# print(list)
