@@ -19,8 +19,11 @@ def talk_to_server(sock):
     if msg == 'quit':
         print("client quitting at operator request")
         return False
-    command = changeInput(msg)
-    if (not command):
+    if (checkFormat(msg)):
+        command = changeInput(msg)
+    else:
+        return False
+    if not command:
         return False
     print(f"sending message '{command}' to server")
     sock.sendall(command.encode('utf-8'))
@@ -30,48 +33,85 @@ def talk_to_server(sock):
         return False
     else:
         print(f"received reply '{reply}' from server")
-        reply = ord(reply)
+        reply = reply.decode()
         print(msg, '=', reply)
         return reply
+    
+def checkFormat(msg):
+    if (len(msg)==0):
+        print('The message is empty')
+        return False
+    firstSign = False
+    if (msg[0]=='+') or (msg[0]=='-'):
+        sign = msg[0]
+        msg = msg[1:]
+        firstSign = True
+    number = re.split('\+|-', msg)
+    for num in number:
+        if (num == ''):
+            print('no number between two signs')
+            return False
+        if not num.isnumeric():
+            print(num, 'is not recognized')
+            return False
+    list = []
+    if (firstSign):
+        list.append(sign)
+    for i in range(0, len(msg)):
+        if (msg[i]=='+') or (msg[i]=='-'):
+            list.append(msg[i])
+    if (len(number)==len(list)):
+        return True
+    elif (len(number)-1==len(list)):
+        return True
+    else:
+        return False
+    
 
 def changeInput(msg):
     length = len(msg)
     plus = []
     minus = []
-    sign = 'plus'
-    list = re.split('\+|-', msg)
+    list = []
+    firstSign = True
+    if (msg[0].isnumeric()):
+        list.append('+')
+        firstSign = False
     for i in range(0, length):
-        if (msg[i].isnumeric()) and (sign == 'plus'):
-            plus.append(msg[i])
-        elif (msg[i].isnumeric()) and (sign == 'minus'):
-            minus.append(msg[i])
-        elif (msg[i] == '+'):
-            sign = 'plus'
-        elif (msg[i] == '-'):
-            sign = 'minus'
+        if (msg[i]=='+') or (msg[i]=='-'):
+            list.append(msg[i])
+    number = re.split('\+|-', msg)
+    if (firstSign):
+        number = number[1:]
+    if not (len(number) == len(list)):
+        return False
+    for i in range (0, len(list)):
+        if (list[i]=='+'):
+            plus.append(number[i])
         else:
-            print(msg[i], 'is not recognized')
-            return False
-    plusStr = ','.join(plus)
-    minuStr = ','.join(minus)
-    result = '+' + plusStr + ';' + '-' + minuStr
+            minus.append(number[i])
+    plusStr = ''
+    if (len(plus)!=0):
+        plusStr = ','.join(plus)
+        plusStr = '+' + plusStr
+    minuStr = ''
+    if (len(minus)!=0):
+        minuStr = ','.join(minus)
+        minuStr = '-' + minuStr
+    if (len(plus)!=0) and (len(minus)!=0):
+        result = plusStr + ';' + minuStr
+    if (len(plus)!=0) and (len(minus)==0):
+        result = plusStr
+    if (len(plus)==0) and (len(minus)!=0):
+        result = minuStr
+    print('The input message is changed into: ', result)
     return result
-
-# Make sure that two signs are not near each other (like ++/--/+-/-+)
-def checkSign(msg):
-    for i in range(0, len(msg)):
-        if (msg[i] == '+') or (msg[i] == '-'):
-            if ((i+1)<len(msg)):
-                if (msg[i+1] == '+') or (msg[i+1] == '-'):
-                    return False
-            else:
-                return False
-    return True
-
-
 
 
 if __name__ == "__main__":
     run_client()
     print("test client is done, exiting...")
+ 
+ 
+        
 
