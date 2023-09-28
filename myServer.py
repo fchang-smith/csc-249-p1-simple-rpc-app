@@ -5,16 +5,13 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 def addition(msg):
     length = len(msg)
-    print('length of the message: ', length)
     for i in range (1, length):
         if (not msg[i].isnumeric()) and (not msg[i]==','):
             print('The receiving message is not in correct format')
             return False
     num = msg[1:].split(',')
-    print('get single number: ', num)
     sum = 0
     for i in range(0, len(num)):
-        print('num[i]: ',num[i])
         sum += int(num[i])
     return sum 
 
@@ -33,9 +30,7 @@ def substraction(msg):
 
 def recvCommand(data):
     data = data.decode('utf-8')
-    print('Decoding data: ', data)
     opList = data.split(';')
-    print('after split: ', opList)
     sum = 0
     diff = 0
     result = 0
