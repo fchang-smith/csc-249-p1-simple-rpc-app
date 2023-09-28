@@ -15,14 +15,12 @@ The server only processes messages in a specific format:
 2. The server can do addition and subtraction at the same time if the message uses ';' to separate two different operations. Example: '+1,2,3;-4,5,6' means adding 1, 2, 3 together and then subtracting 4, 5, 6.
  
 # Example Output
-valid input:
 1. input = 1-2+3    output: 2
 2. input = +1-2+3    output: 2
 3. input = -2+3+5    output: 6
 4. input = +1+2+3    output: 6
 5. input = -1-2-3    output: -6
-invalid input:
-input = 3++5    The client will print a warning message 'No number between two signs' and exit.
+6. input = 3++5    The client will print a warning message 'No number between two signs' and exit.
 
 # Acknowledgments
 
