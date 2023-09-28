@@ -42,22 +42,17 @@ def recvCommand(data):
     add = True
     minus = True
     for operation in opList:
-        print(len(opList))
         if (len(operation)!=0):
             if (operation[0] == '+'):
-                print('operation == +')
                 add = addition(operation)
                 if (not add):
                     return False
                 sum += add
-                print('sum: ', sum)
             elif (operation[0] == '-'):
-                print('operation == -')
                 minus = substraction(operation)
                 if (not minus):
                     return False
                 diff += minus
-                print('diff: ', diff)
             else:
                 print('The command format is incorrect (should be + or -)')
                 return False
